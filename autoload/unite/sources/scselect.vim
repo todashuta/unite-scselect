@@ -8,7 +8,7 @@ function! unite#sources#scselect#define()
 endfunction
 
 function! unite#sources#scselect#select(name)
-  call unite#util#system('scselect ' . shellescape(a:name))
+  call scselect#select(a:name)
 endfunction
 
 let s:source = {
@@ -17,15 +17,11 @@ let s:source = {
       \ }
 
 function! s:source.gather_candidates(args, context)
-  let choices = split(unite#util#system('scselect'), '\n')[1:]
-  let choices = map(deepcopy(choices), 'substitute(v:val, "^.\\{-}(", "", "")')
-  let choices = map(deepcopy(choices), 'substitute(v:val, ")$", "", "")')
-
-  return map(copy(choices), '{
+  return map(copy(scselect#get_candidates()), '{
         \   "word": v:val,
         \   "source": "scselect",
         \   "kind": "command",
-        \   "action__command": "call unite#sources#scselect#select(''" . v:val . "'')",
+        \   "action__command": "call scselect#select(''" . v:val . "'')",
         \ }')
 endfunction
 
