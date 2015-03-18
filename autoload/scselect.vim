@@ -1,7 +1,9 @@
 " autoload/scselect.vim
 
-function! s:system()
-  " TODO: vimproc support
+let s:P = vital#of('scselect').import('Process')
+
+function! scselect#system(...)
+  return call(s:P.system, a:000)
 endfunction
 
 function! s:parse_env_name(str)
@@ -12,17 +14,17 @@ function! s:parse_env_name(str)
 endfunction
 
 function! scselect#get_current_env()
-  let lines = split(system('scselect'), '\n')[1:]
+  let lines = split(scselect#system('scselect'), '\n')[1:]
   let lines = filter(copy(lines), 'v:val =~ "^\\s\\*\\s"')
   return s:parse_env_name(lines[0])
 endfunction
 
 function! scselect#select(value)
-  return '[scselect] ' . system('scselect ' . shellescape(a:value))
+  return '[scselect] ' . scselect#system('scselect ' . shellescape(a:value))
 endfunction
 
 function! scselect#get_candidates()
-  let lines = split(system('scselect'), '\n')[1:]
+  let lines = split(scselect#system('scselect'), '\n')[1:]
   let lines = map(copy(lines), 's:parse_env_name(v:val)')
   return lines
 endfunction
