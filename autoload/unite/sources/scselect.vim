@@ -7,10 +7,6 @@ function! unite#sources#scselect#define()
   return executable('scselect') ? s:source : []
 endfunction
 
-function! unite#sources#scselect#select(name)
-  call scselect#select(a:name)
-endfunction
-
 let s:source = {
       \   'name': 'scselect',
       \   'description': 'Select network environment',
